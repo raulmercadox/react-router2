@@ -4,7 +4,7 @@ const NewQuote = () => {
     const addQuoteHandler = (quote) => {
         console.log(quote);
     }
-    return <QuoteForm onAddQuote={addQuoteHandler()} />
+    return <QuoteForm onAddQuote={addQuoteHandler} />
 }
 
 export default NewQuote;

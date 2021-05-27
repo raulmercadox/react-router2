@@ -1,12 +1,34 @@
 import QuoteList from "../components/quotes/QuoteList";
-
-const DUMMY_QUOTES = [
-    {id: 1, author: "Raul Mercado", text:"Todo se puede con esfuerzo"},
-    {id: 2, author: "Juan Perez", text:"A vivir la vida loca"},
-]
+import useHttp from "../hooks/use-http";
+import {getAllQuotes} from '../lib/api';
+import {useEffect} from "react";
+import LoadingSpinner from "../components/UI/LoadingSpinner";
+import NoQuotesFound from "../components/quotes/NoQuotesFound";
 
 const Quotes = () => {
-    return <QuoteList quotes={DUMMY_QUOTES}/>
+    const {sendRequest, status, data: allQuotes, error} = useHttp(getAllQuotes, true);
+
+    useEffect(() => {
+        sendRequest();
+    }, [sendRequest]);
+
+
+    if (status === 'pending')
+    {
+        return <div className="centered"><LoadingSpinner/></div>;
+    }
+
+    if (error)
+    {
+        return <div className="centered">{error}</div>
+    }
+
+    if (status === 'completed' && allQuotes.length === 0)
+    {
+        return <NoQuotesFound/>
+    }
+
+    return <QuoteList quotes={allQuotes}/>
 }
 
 export default Quotes;

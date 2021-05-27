@@ -20,10 +20,7 @@ const QuoteList = (props) => {
         });
     };
 
-    console.log(location);
-
     const sortHandling = () => {
-        // history.push('/quotes?sort=' + (ascending ? 'des' : 'asc'));
         history.push({
             pathname: location.pathname,
             search: '?sort=' + (ascending ? 'des' : 'asc')

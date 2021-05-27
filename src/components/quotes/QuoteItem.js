@@ -3,7 +3,6 @@ import {Link, useRouteMatch} from "react-router-dom";
 
 const QuoteItem = (props) => {
     const match = useRouteMatch();
-    console.log(match);
       return (
         <li className={classes.item}>
           <figure>

@@ -1,21 +1,38 @@
 import {useParams, useRouteMatch,Route, Link} from 'react-router-dom'
-import React, {Fragment} from 'react';
+import React, {Fragment, useEffect} from 'react';
 import Comments from "../components/comments/Comments";
 import HighlightedQuote from "../components/quotes/HighlightedQuote";
-
-const DUMMY_QUOTES = [
-    {id: 1, author: "Raul Mercado", text:"Todo se puede con esfuerzo"},
-    {id: 2, author: "Juan Perez", text:"A vivir la vida loca"},
-]
+import useHttp from "../hooks/use-http";
+import {getSingleQuote} from '../lib/api';
+import LoadingSpinner from "../components/UI/LoadingSpinner";
 
 const QuoteDetail = () => {
+
+    const {sendRequest, status, data: quote, error} = useHttp(getSingleQuote, true);
     const params = useParams();
-    const quote = DUMMY_QUOTES.find(q => q.id === Number(params.quoteId));
+    const quoteId = params.quoteId;
+
+    useEffect(() => {
+        sendRequest(quoteId);
+    }, [quoteId, sendRequest]);
+
+
+    // const quote = DUMMY_QUOTES.find(q => q.id === Number(params.quoteId));
     const match = useRouteMatch();
-    console.log(match);
-    if (!quote)
+    // console.log(match);
+    if (status === 'pending')
+    {
+        return <div className="centered"><LoadingSpinner/></div>;
+    }
+
+    if (status === 'completed' && !quote)
     {
         return <div>Quote not found</div>
+    }
+
+    if (error)
+    {
+        return <div className="centered">{error}</div>
     }
 
     return <Fragment>
